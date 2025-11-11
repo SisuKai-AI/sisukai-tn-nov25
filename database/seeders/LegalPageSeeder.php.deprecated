@@ -1,0 +1,51 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\LegalPage;
+use Illuminate\Database\Seeder;
+
+class LegalPageSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $pages = [
+            [
+                'title' => 'Privacy Policy',
+                'slug' => 'privacy-policy',
+                'content' => '<h2>Privacy Policy</h2><p>Last updated: ' . date('F d, Y') . '</p><p>This Privacy Policy describes how SisuKai collects, uses, and protects your personal information.</p><h3>Information We Collect</h3><p>We collect information you provide directly to us, including name, email address, and learning progress data.</p><h3>How We Use Your Information</h3><p>We use the information we collect to provide, maintain, and improve our services, and to communicate with you.</p><h3>Data Security</h3><p>We implement appropriate technical and organizational measures to protect your personal information.</p>',
+                'meta_description' => 'Learn how SisuKai protects your privacy and handles your personal information.',
+                'is_published' => true,
+                'version' => 1,
+            ],
+            [
+                'title' => 'Terms of Service',
+                'slug' => 'terms-of-service',
+                'content' => '<h2>Terms of Service</h2><p>Last updated: ' . date('F d, Y') . '</p><p>Please read these Terms of Service carefully before using SisuKai.</p><h3>Acceptance of Terms</h3><p>By accessing and using this service, you accept and agree to be bound by the terms and provision of this agreement.</p><h3>Use License</h3><p>Permission is granted to temporarily access the materials on SisuKai for personal, non-commercial use only.</p><h3>Disclaimer</h3><p>The materials on SisuKai are provided on an \'as is\' basis. SisuKai makes no warranties, expressed or implied.</p>',
+                'meta_description' => 'Read the SisuKai Terms of Service to understand your rights and responsibilities.',
+                'is_published' => true,
+                'version' => 1,
+            ],
+            [
+                'title' => 'Cookie Policy',
+                'slug' => 'cookie-policy',
+                'content' => '<h2>Cookie Policy</h2><p>Last updated: ' . date('F d, Y') . '</p><p>This Cookie Policy explains how SisuKai uses cookies and similar technologies.</p><h3>What Are Cookies</h3><p>Cookies are small text files that are stored on your device when you visit our website.</p><h3>How We Use Cookies</h3><p>We use cookies to enhance your experience, analyze site usage, and assist in our marketing efforts.</p><h3>Managing Cookies</h3><p>You can control and manage cookies through your browser settings.</p>',
+                'meta_description' => 'Understand how SisuKai uses cookies to improve your experience.',
+                'is_published' => true,
+                'version' => 1,
+            ],
+            [
+                'title' => 'Acceptable Use Policy',
+                'slug' => 'acceptable-use-policy',
+                'content' => '<h2>Acceptable Use Policy</h2><p>Last updated: ' . date('F d, Y') . '</p><p>This Acceptable Use Policy outlines the proper use of SisuKai services.</p><h3>Prohibited Activities</h3><p>You may not use our service to engage in any unlawful or harmful activities, including but not limited to sharing account credentials or attempting to access unauthorized areas.</p><h3>Content Standards</h3><p>Any content you submit must comply with applicable laws and must not be offensive, fraudulent, or misleading.</p><h3>Enforcement</h3><p>We reserve the right to suspend or terminate accounts that violate this policy.</p>',
+                'meta_description' => 'Review the SisuKai Acceptable Use Policy for guidelines on proper platform usage.',
+                'is_published' => true,
+                'version' => 1,
+            ],
+        ];
+
+        foreach ($pages as $page) {
+            LegalPage::create($page);
+        }
+    }
+}

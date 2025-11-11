@@ -1,0 +1,782 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Certification;
+use App\Models\Domain;
+use App\Models\Topic;
+use Illuminate\Database\Seeder;
+
+class TopicSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     * 
+     * This seeder creates 482 topics across 90 domains for 18 certifications.
+     */
+    public function run(): void
+    {
+        $this->command->info('Starting to seed topics...');
+        
+        $totalTopics = 0;
+        
+        // Get all certifications with their domains
+        $certifications = Certification::with('domains')->get();
+        
+        foreach ($certifications as $certification) {
+            $topics = $this->getTopicsForCertification($certification->slug);
+            
+            if (empty($topics)) {
+                continue;
+            }
+            
+            foreach ($certification->domains as $domain) {
+                $domainTopics = $topics[$domain->name] ?? [];
+                
+                foreach ($domainTopics as $index => $topicName) {
+                    Topic::create([
+                        'domain_id' => $domain->id,
+                        'name' => $topicName,
+                        'order' => $index + 1,
+                    ]);
+                    $totalTopics++;
+                }
+            }
+            
+            $this->command->info("✓ Created topics for: {$certification->name}");
+        }
+        
+        $this->command->info("\n✓ Successfully created {$totalTopics} topics!");
+    }
+    
+    /**
+     * Get topics for a specific certification by slug
+     */
+    private function getTopicsForCertification(string $slug): array
+    {
+        $allTopics = [
+            // AWS Certified Cloud Practitioner
+            'aws-certified-cloud-practitioner' => [
+                'Cloud Concepts' => [
+                    'Define the AWS Cloud and Value Proposition',
+                    'Cloud Computing Models',
+                    'Cloud Deployment Models',
+                    'AWS Well-Architected Framework',
+                    'Total Cost of Ownership (TCO)',
+                ],
+                'Security and Compliance' => [
+                    'AWS Shared Responsibility Model',
+                    'AWS Identity and Access Management (IAM)',
+                    'Security Services',
+                    'Data Protection and Encryption',
+                    'Compliance Programs',
+                ],
+                'Cloud Technology and Services' => [
+                    'Compute Services',
+                    'Storage Services',
+                    'Database Services',
+                    'Networking Services',
+                    'Management and Monitoring',
+                ],
+                'Billing, Pricing, and Support' => [
+                    'AWS Pricing Models',
+                    'Billing and Cost Management Tools',
+                    'AWS Organizations and Consolidated Billing',
+                    'AWS Support Plans',
+                    'AWS Marketplace',
+                ],
+            ],
+            
+            // AWS Certified Solutions Architect - Associate
+            'aws-certified-solutions-architect-associate' => [
+                'Design Resilient Architectures' => [
+                    'High Availability Architecture',
+                    'Disaster Recovery Strategies',
+                    'Decoupling Mechanisms',
+                    'Elastic Load Balancing',
+                    'Auto Scaling',
+                    'Resilient Storage Solutions',
+                ],
+                'Design High-Performing Architectures' => [
+                    'Compute Optimization',
+                    'Storage Performance',
+                    'Database Performance',
+                    'Network Performance',
+                    'Caching Strategies',
+                    'Serverless Architectures',
+                ],
+                'Design Secure Applications and Architectures' => [
+                    'Network Security',
+                    'Application Security',
+                    'Data Encryption',
+                    'Identity and Access Management',
+                    'Secrets Management',
+                    'Compliance and Auditing',
+                ],
+                'Design Cost-Optimized Architectures' => [
+                    'Cost-Effective Storage',
+                    'Cost-Effective Compute',
+                    'Cost-Effective Database Solutions',
+                    'Network Cost Optimization',
+                    'Monitoring and Cost Allocation',
+                    'Serverless Cost Optimization',
+                ],
+            ],
+            
+            // Microsoft Azure Fundamentals (AZ-900)
+            'microsoft-azure-fundamentals-az-900' => [
+                'Describe Cloud Concepts' => [
+                    'Cloud Computing Fundamentals',
+                    'Benefits of Cloud Services',
+                    'Infrastructure as a Service (IaaS)',
+                    'Platform as a Service (PaaS)',
+                    'Software as a Service (SaaS)',
+                ],
+                'Describe Azure Architecture and Services' => [
+                    'Azure Regions and Availability Zones',
+                    'Azure Compute Services',
+                    'Azure Networking Services',
+                    'Azure Storage Services',
+                    'Azure Database Services',
+                ],
+                'Describe Azure Management and Governance' => [
+                    'Azure Cost Management',
+                    'Azure Resource Manager',
+                    'Azure Policy and Blueprints',
+                    'Azure Monitor and Advisor',
+                    'Azure Service Level Agreements (SLAs)',
+                ],
+                'Describe Azure Security and Compliance' => [
+                    'Azure Active Directory',
+                    'Azure Security Center and Sentinel',
+                    'Azure Key Vault',
+                    'Network Security',
+                    'Compliance and Privacy',
+                ],
+            ],
+            
+            // Google Cloud Digital Leader
+            'google-cloud-digital-leader' => [
+                'Digital Transformation with Google Cloud' => [
+                    'Cloud Technology Fundamentals',
+                    'Google Cloud Infrastructure',
+                    'Total Cost of Ownership',
+                    'Business Transformation',
+                    'Google Cloud Adoption Framework',
+                ],
+                'Innovating with Data and Google Cloud' => [
+                    'Data Value and Strategy',
+                    'Google Cloud Data Services',
+                    'Data Analytics and Business Intelligence',
+                    'Machine Learning and AI',
+                    'Data Governance and Compliance',
+                ],
+                'Infrastructure and Application Modernization' => [
+                    'Compute Options',
+                    'Containerization and Kubernetes',
+                    'Serverless Computing',
+                    'Application Modernization',
+                    'Hybrid and Multi-Cloud',
+                ],
+                'Understanding Google Cloud Security and Operations' => [
+                    'Google Cloud Security Model',
+                    'Identity and Access Management',
+                    'Network Security',
+                    'Monitoring and Logging',
+                    'Compliance and Certifications',
+                ],
+            ],
+            
+            // Certified Kubernetes Administrator (CKA)
+            'certified-kubernetes-administrator-cka' => [
+                'Cluster Architecture, Installation & Configuration' => [
+                    'Kubernetes Architecture Components',
+                    'RBAC Configuration',
+                    'Cluster Installation with Kubeadm',
+                    'High Availability Clusters',
+                    'Cluster Upgrades',
+                ],
+                'Workloads & Scheduling' => [
+                    'Deployments and ReplicaSets',
+                    'DaemonSets and StatefulSets',
+                    'ConfigMaps and Secrets',
+                    'Resource Limits and Requests',
+                    'Pod Scheduling',
+                ],
+                'Services & Networking' => [
+                    'Service Types',
+                    'Network Policies',
+                    'Ingress Controllers',
+                    'DNS in Kubernetes',
+                    'CNI Plugins',
+                ],
+                'Storage' => [
+                    'Volumes and Volume Types',
+                    'Persistent Volumes (PV)',
+                    'Persistent Volume Claims (PVC)',
+                    'Storage Classes',
+                    'StatefulSet Storage',
+                ],
+                'Troubleshooting' => [
+                    'Cluster Component Troubleshooting',
+                    'Application Troubleshooting',
+                    'Networking Troubleshooting',
+                    'Logging and Monitoring',
+                    'Node Troubleshooting',
+                ],
+            ],
+            
+            // CompTIA Security+
+            'comptia-security-plus' => [
+                'General Security Concepts' => [
+                    'Security Controls',
+                    'CIA Triad',
+                    'Change Management',
+                    'Cryptographic Solutions',
+                    'Security Frameworks',
+                ],
+                'Threats, Vulnerabilities, and Mitigations' => [
+                    'Threat Actors',
+                    'Attack Vectors',
+                    'Vulnerability Types',
+                    'Malware Types',
+                    'Social Engineering',
+                ],
+                'Security Architecture' => [
+                    'Network Security Architecture',
+                    'Cloud Security',
+                    'Secure Application Development',
+                    'Authentication Methods',
+                    'Authorization Models',
+                ],
+                'Security Operations' => [
+                    'Security Techniques',
+                    'Asset Management',
+                    'Vulnerability Management',
+                    'Security Monitoring',
+                    'Incident Response',
+                ],
+                'Security Program Management and Oversight' => [
+                    'Security Governance',
+                    'Risk Management',
+                    'Third-Party Risk',
+                    'Security Compliance',
+                    'Security Awareness Training',
+                ],
+            ],
+            
+            // CISSP
+            'cissp' => [
+                'Security and Risk Management' => [
+                    'Security Governance Principles',
+                    'Compliance and Legal Requirements',
+                    'Professional Ethics',
+                    'Risk Management Concepts',
+                    'Business Continuity Planning',
+                ],
+                'Asset Security' => [
+                    'Information and Asset Classification',
+                    'Ownership and Accountability',
+                    'Privacy Protection',
+                    'Data Retention and Disposal',
+                    'Data Security Controls',
+                ],
+                'Security Architecture and Engineering' => [
+                    'Secure Design Principles',
+                    'Security Models',
+                    'Security Evaluation Models',
+                    'Cryptographic Systems',
+                    'Physical Security',
+                ],
+                'Communication and Network Security' => [
+                    'Network Architecture',
+                    'Secure Network Components',
+                    'Secure Communication Channels',
+                    'Network Attacks',
+                    'Wireless Security',
+                ],
+                'Identity and Access Management (IAM)' => [
+                    'Physical Access Control',
+                    'Logical Access Control',
+                    'Identity Management',
+                    'Access Control Models',
+                    'Single Sign-On and Federation',
+                ],
+                'Security Assessment and Testing' => [
+                    'Assessment and Testing Strategies',
+                    'Security Control Testing',
+                    'Security Audits',
+                    'Vulnerability Assessment Tools',
+                    'Test Output Analysis',
+                ],
+                'Security Operations' => [
+                    'Investigations',
+                    'Logging and Monitoring',
+                    'Resource Provisioning',
+                    'Foundational Security Operations',
+                    'Incident Management',
+                ],
+                'Software Development Security' => [
+                    'Secure SDLC',
+                    'Development Environments',
+                    'Software Security Effectiveness',
+                    'Acquired Software Security',
+                    'Database Security',
+                ],
+            ],
+            
+            // Certified Ethical Hacker (CEH)
+            'certified-ethical-hacker-ceh' => [
+                'Introduction to Ethical Hacking' => [
+                    'Ethical Hacking Fundamentals',
+                    'Information Security Controls',
+                    'Cyber Kill Chain',
+                    'Hacking Laws and Regulations',
+                ],
+                'Footprinting and Reconnaissance' => [
+                    'Footprinting Methodology',
+                    'Search Engine Footprinting',
+                    'Website and Email Footprinting',
+                    'Social Media and People Search',
+                ],
+                'Scanning Networks' => [
+                    'Network Scanning Methodology',
+                    'Scanning Tools',
+                    'OS Fingerprinting',
+                    'Evasion Techniques',
+                ],
+                'Enumeration' => [
+                    'NetBIOS and SMB Enumeration',
+                    'SNMP and LDAP Enumeration',
+                    'NTP and DNS Enumeration',
+                    'SMTP and RPC Enumeration',
+                ],
+                'Vulnerability Analysis' => [
+                    'Vulnerability Assessment Concepts',
+                    'Vulnerability Scoring',
+                    'Vulnerability Scanning Tools',
+                    'Vulnerability Management',
+                ],
+                'System Hacking' => [
+                    'Password Cracking',
+                    'Privilege Escalation',
+                    'Maintaining Access',
+                    'Covering Tracks',
+                ],
+                'Malware Threats' => [
+                    'Malware Types',
+                    'Advanced Persistent Threats',
+                    'Malware Analysis',
+                    'Malware Countermeasures',
+                ],
+                'Sniffing' => [
+                    'Packet Sniffing Concepts',
+                    'Sniffing Techniques',
+                    'Sniffing Tools',
+                    'Sniffing Countermeasures',
+                ],
+                'Social Engineering' => [
+                    'Social Engineering Concepts',
+                    'Social Engineering Techniques',
+                    'Phishing and Spear Phishing',
+                    'Identity Theft and Impersonation',
+                ],
+                'Denial-of-Service' => [
+                    'DoS and DDoS Concepts',
+                    'DDoS Attack Techniques',
+                    'Botnets',
+                    'DoS Countermeasures',
+                ],
+                'Session Hijacking' => [
+                    'Session Hijacking Concepts',
+                    'Application Layer Hijacking',
+                    'Network Layer Hijacking',
+                    'Session Hijacking Countermeasures',
+                ],
+                'Evading IDS, Firewalls, and Honeypots' => [
+                    'IDS and Firewall Concepts',
+                    'IDS/Firewall Evasion Techniques',
+                    'Honeypot Detection',
+                    'Evasion Countermeasures',
+                ],
+            ],
+            
+            // CompTIA CySA+
+            'comptia-cysa-plus' => [
+                'Security Operations' => [
+                    'Network Architecture Concepts',
+                    'Security Monitoring',
+                    'Threat Intelligence',
+                    'Security Tools',
+                    'Incident Detection',
+                ],
+                'Vulnerability Management' => [
+                    'Vulnerability Assessment Process',
+                    'Vulnerability Scanners',
+                    'Vulnerability Prioritization',
+                    'Cloud Vulnerabilities',
+                    'Remediation and Validation',
+                ],
+                'Incident Response and Management' => [
+                    'Incident Response Process',
+                    'Incident Response Procedures',
+                    'Forensics Fundamentals',
+                    'Indicators of Compromise',
+                    'Incident Documentation',
+                ],
+                'Reporting and Communication' => [
+                    'Data Privacy and Protection',
+                    'Incident Communication',
+                    'Security Metrics and KPIs',
+                    'Compliance Reporting',
+                    'Stakeholder Management',
+                ],
+            ],
+            
+            // GIAC Security Essentials (GSEC)
+            'giac-security-essentials-gsec' => [
+                'Defensible Network Architecture' => [
+                    'Defense in Depth',
+                    'Network Segmentation',
+                    'Secure Network Design',
+                    'Network Security Controls',
+                    'Cloud Network Security',
+                ],
+                'Network Security Devices and Secure Communications' => [
+                    'Firewall Technologies',
+                    'VPN Technologies',
+                    'Intrusion Detection and Prevention',
+                    'Wireless Security',
+                    'Secure Communication Protocols',
+                ],
+                'Identity and Access Management' => [
+                    'Authentication Mechanisms',
+                    'Authorization Models',
+                    'Identity Management Systems',
+                    'Access Control Technologies',
+                    'Single Sign-On',
+                ],
+                'Securing Windows and Application Security' => [
+                    'Windows Security Architecture',
+                    'Windows Hardening',
+                    'Windows Security Tools',
+                    'Application Security Fundamentals',
+                    'Web Application Security',
+                ],
+                'Securing Linux and Application Security' => [
+                    'Linux Security Architecture',
+                    'Linux Hardening',
+                    'Linux Security Tools',
+                    'Secure Application Deployment',
+                    'Web Server Security',
+                ],
+                'Security Operations and Incident Response' => [
+                    'Security Monitoring',
+                    'Log Analysis',
+                    'Incident Detection',
+                    'Incident Response',
+                    'Security Automation',
+                ],
+            ],
+            
+            // CompTIA A+
+            'comptia-a-plus' => [
+                'Mobile Devices' => [
+                    'Laptop Hardware Installation',
+                    'Mobile Device Display Components',
+                    'Mobile Device Accessories',
+                    'Mobile Device Connectivity',
+                    'Mobile Device Synchronization',
+                ],
+                'Networking' => [
+                    'TCP and UDP Ports',
+                    'Network Protocols',
+                    'Networking Hardware',
+                    'SOHO Network Setup',
+                    'Network Configuration',
+                ],
+                'Hardware' => [
+                    'Cable Types and Connectors',
+                    'RAM Installation',
+                    'Storage Devices',
+                    'Motherboards and CPUs',
+                    'Power Supplies',
+                ],
+                'Virtualization and Cloud Computing' => [
+                    'Cloud Computing Concepts',
+                    'Cloud Services',
+                    'Client-Side Virtualization',
+                    'Virtual Machine Management',
+                    'Cloud Storage',
+                ],
+                'Hardware and Network Troubleshooting' => [
+                    'Troubleshooting Methodology',
+                    'Motherboard and Power Issues',
+                    'Storage Troubleshooting',
+                    'Display Troubleshooting',
+                    'Mobile Device Troubleshooting',
+                ],
+            ],
+            
+            // CompTIA Network+
+            'comptia-network-plus' => [
+                'Networking Fundamentals' => [
+                    'OSI Model',
+                    'Networking Appliances',
+                    'Cloud Connectivity',
+                    'Network Ports and Protocols',
+                    'Network Traffic Types',
+                ],
+                'Network Implementations' => [
+                    'Routing Technologies',
+                    'Network Topologies',
+                    'Ethernet Switching',
+                    'Wireless Technologies',
+                    'Physical Installation',
+                ],
+                'Network Operations' => [
+                    'Organizational Processes',
+                    'Network Monitoring',
+                    'Disaster Recovery',
+                    'Network Hardening',
+                    'Network Documentation',
+                ],
+                'Network Security' => [
+                    'Network Security Concepts',
+                    'Network Attacks',
+                    'Network Security Features',
+                    'Wireless Security',
+                    'Remote Access Security',
+                ],
+                'Network Troubleshooting' => [
+                    'Troubleshooting Methodology',
+                    'Cable and Physical Issues',
+                    'Network Service Issues',
+                    'Performance Issues',
+                    'Connectivity Issues',
+                ],
+            ],
+            
+            // Cisco CCNA
+            'cisco-ccna' => [
+                'Network Fundamentals' => [
+                    'Network Components',
+                    'Network Topology Architectures',
+                    'Physical Interfaces and Cabling',
+                    'IPv4 Addressing',
+                    'IPv6 Addressing',
+                ],
+                'Network Access' => [
+                    'VLAN Configuration',
+                    'Interswitch Connectivity',
+                    'Layer 2 Discovery Protocols',
+                    'EtherChannel',
+                    'Spanning Tree Protocol',
+                ],
+                'IP Connectivity' => [
+                    'Routing Table Components',
+                    'Router Forwarding Decision',
+                    'IPv4 Static Routing',
+                    'IPv6 Static Routing',
+                    'OSPF Configuration',
+                ],
+                'IP Services' => [
+                    'NAT Configuration',
+                    'NTP Configuration',
+                    'DHCP and DNS',
+                    'SNMP',
+                    'Syslog',
+                ],
+                'Security Fundamentals' => [
+                    'Security Concepts',
+                    'Security Program Elements',
+                    'Device Access Control',
+                    'Access Control Lists',
+                    'Layer 2 Security',
+                ],
+                'Automation and Programmability' => [
+                    'Network Automation Impact',
+                    'Controller-Based Networking',
+                    'Cisco DNA Center',
+                    'REST APIs',
+                    'Configuration Management',
+                ],
+            ],
+            
+            // PMP
+            'pmp' => [
+                'People' => [
+                    'Team Leadership',
+                    'Team Performance Management',
+                    'Stakeholder Engagement',
+                    'Team Empowerment',
+                    'Communication and Collaboration',
+                ],
+                'Process' => [
+                    'Project Planning',
+                    'Project Execution',
+                    'Risk Management',
+                    'Change Management',
+                    'Procurement Management',
+                ],
+                'Business Environment' => [
+                    'Project Compliance',
+                    'Benefits Realization',
+                    'External Environment Changes',
+                    'Organizational Change',
+                    'Continuous Improvement',
+                ],
+            ],
+            
+            // Certified ScrumMaster (CSM)
+            'certified-scrummaster-csm' => [
+                'Scrum Framework and Theory' => [
+                    'Scrum Values and Principles',
+                    'Scrum Roles',
+                    'Scrum Events',
+                    'Scrum Artifacts',
+                ],
+                'Scrum Master Role and Responsibilities' => [
+                    'Servant Leadership',
+                    'Serving the Product Owner',
+                    'Serving the Development Team',
+                    'Serving the Organization',
+                ],
+                'Facilitating Scrum Events' => [
+                    'Sprint Planning Facilitation',
+                    'Daily Scrum Facilitation',
+                    'Sprint Review Facilitation',
+                    'Sprint Retrospective Facilitation',
+                ],
+                'Coaching and Mentoring' => [
+                    'Team Coaching',
+                    'Product Owner Coaching',
+                    'Organizational Coaching',
+                    'Conflict Resolution',
+                ],
+                'Servant Leadership' => [
+                    'Servant Leadership Behaviors',
+                    'Building Trust',
+                    'Team Empowerment',
+                    'Creating High-Performance Environment',
+                ],
+            ],
+            
+            // ITIL 4 Foundation
+            'itil-4-foundation' => [
+                'Key Concepts of Service Management' => [
+                    'Value and Value Co-Creation',
+                    'Service and Service Management',
+                    'Products and Service Offerings',
+                    'Service Relationships',
+                ],
+                'The Four Dimensions of Service Management' => [
+                    'Organizations and People',
+                    'Information and Technology',
+                    'Partners and Suppliers',
+                    'Value Streams and Processes',
+                ],
+                'The ITIL Service Value System' => [
+                    'Guiding Principles',
+                    'Governance',
+                    'Service Value Chain',
+                    'Continual Improvement',
+                ],
+                'The ITIL Practices' => [
+                    'General Management Practices',
+                    'Service Management Practices',
+                    'Technical Management Practices',
+                    'Service Level Management',
+                ],
+                'Continual Improvement' => [
+                    'Continual Improvement Model',
+                    'Measurement and Metrics',
+                    'Guiding Principles in Improvement',
+                    'Improvement Initiatives',
+                ],
+            ],
+            
+            // Oracle Java SE Programmer
+            'oracle-java-se-programmer' => [
+                'Java Basics and Data Types' => [
+                    'Java Program Structure',
+                    'Primitive Data Types',
+                    'Wrapper Classes',
+                    'Operators',
+                    'String Manipulation',
+                ],
+                'Controlling Program Flow' => [
+                    'If-Else Statements',
+                    'Switch Statements',
+                    'For Loops',
+                    'While and Do-While Loops',
+                    'Break and Continue',
+                ],
+                'Object-Oriented Programming' => [
+                    'Classes and Objects',
+                    'Encapsulation',
+                    'Inheritance',
+                    'Interfaces and Abstract Classes',
+                    'Polymorphism',
+                ],
+                'Exception Handling and Assertions' => [
+                    'Exception Hierarchy',
+                    'Try-Catch-Finally',
+                    'Throw and Throws',
+                    'Multi-Catch',
+                    'Assertions',
+                ],
+                'Working with Java APIs' => [
+                    'StringBuilder and StringBuffer',
+                    'Arrays and ArrayList',
+                    'LocalDate and LocalTime',
+                    'Collections Framework',
+                    'File I/O',
+                ],
+                'Lambda Expressions and Functional Interfaces' => [
+                    'Lambda Expression Syntax',
+                    'Functional Interfaces',
+                    'Method References',
+                    'Predicate Interface',
+                    'Consumer, Function, and Supplier',
+                ],
+            ],
+            
+            // Azure Data Fundamentals (DP-900)
+            'microsoft-azure-data-fundamentals-dp-900' => [
+                'Describe Core Data Concepts' => [
+                    'Data Workload Types',
+                    'Data Analytics Concepts',
+                    'Relational Data Concepts',
+                    'Non-Relational Data Concepts',
+                ],
+                'Identify Considerations for Relational Data on Azure' => [
+                    'Relational Data Workloads',
+                    'Azure SQL Services',
+                    'Azure Database Services',
+                    'Relational Data Management',
+                ],
+                'Describe Considerations for Working with Non-Relational Data on Azure' => [
+                    'Azure Storage Capabilities',
+                    'Azure Cosmos DB',
+                    'Azure Cosmos DB APIs',
+                    'Non-Relational Data Management',
+                ],
+                'Describe an Analytics Workload on Azure' => [
+                    'Large-Scale Analytics',
+                    'Azure Synapse Analytics',
+                    'Azure Data Lake Storage',
+                    'Real-Time Analytics',
+                ],
+                'Describe Data Visualization in Microsoft Power BI' => [
+                    'Power BI Components',
+                    'Data Modeling',
+                    'Visualizations',
+                    'Reports and Dashboards',
+                ],
+            ],
+        ];
+        
+        return $allTopics[$slug] ?? [];
+    }
+}

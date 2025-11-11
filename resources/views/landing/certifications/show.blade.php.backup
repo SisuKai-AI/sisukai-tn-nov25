@@ -1,0 +1,221 @@
+@extends('layouts.landing')
+
+@section('title', $certification->name . ' - SisuKai')
+@section('meta_description', Str::limit($certification->description, 155))
+
+@section('content')
+
+<!-- Page Header -->
+<section class="page-header bg-primary-custom text-white" style="padding: 4rem 0 3rem;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="d-flex align-items-center mb-3">
+                    <a href="{{ route('landing.certifications.index') }}" class="btn btn-light btn-sm me-3">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Catalog
+                    </a>
+                    <span class="badge bg-light text-primary">{{ $certification->provider }}</span>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">{{ $certification->name }}</h1>
+                <p class="lead mb-0">{{ $certification->description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Certification Details -->
+<section class="landing-section">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- Overview -->
+                <div class="landing-card mb-4">
+                    <h3 class="mb-4">Certification Overview</h3>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="icon bg-primary-custom text-white me-3" style="width: 48px; height: 48px; line-height: 48px; font-size: 1.25rem;">
+                                    <i class="bi bi-question-circle"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Question Bank</small>
+                                    <strong>{{ $certification->exam_question_count ?? 0 }} Questions</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="icon bg-success text-white me-3" style="width: 48px; height: 48px; line-height: 48px; font-size: 1.25rem;">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Exam Duration</small>
+                                    <strong>{{ $certification->exam_duration_minutes ?? 'N/A' }} Minutes</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="icon bg-info text-white me-3" style="width: 48px; height: 48px; line-height: 48px; font-size: 1.25rem;">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Passing Score</small>
+                                    <strong>{{ $certification->passing_score ?? 'N/A' }}%</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="icon bg-warning text-white me-3" style="width: 48px; height: 48px; line-height: 48px; font-size: 1.25rem;">
+                                    <i class="bi bi-diagram-3"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Domains</small>
+                                    <strong>{{ $certification->domains_count ?? 0 }} Domains</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domains -->
+                @if($certification->domains && $certification->domains->count() > 0)
+                <div class="landing-card mb-4">
+                    <h3 class="mb-4">Exam Domains</h3>
+                    <div class="list-group list-group-flush">
+                        @foreach($certification->domains as $domain)
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ $domain->name }}</h6>
+                                    <small class="text-muted">{{ $domain->description }}</small>
+                                </div>
+                                <span class="badge bg-primary-custom rounded-pill">
+                                    {{ $domain->weight ?? 0 }}%
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- What You'll Learn -->
+                <div class="landing-card mb-4">
+                    <h3 class="mb-4">What You'll Learn</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Comprehensive coverage of all exam objectives</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Real-world scenarios and case studies</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Detailed explanations for every question</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Performance tracking and analytics</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Adaptive practice engine</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Timed exam simulations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- CTA Card -->
+                <div class="landing-card sticky-top" style="top: 2rem;">
+                    <div class="text-center mb-4">
+                        <div class="icon bg-primary-custom text-white mx-auto mb-3" style="width: 64px; height: 64px; line-height: 64px; font-size: 2rem;">
+                            <i class="bi bi-award"></i>
+                        </div>
+                        <h4 class="mb-2">Start Preparing Today</h4>
+                        <p class="text-muted mb-0">
+                            Get instant access to our comprehensive practice questions and adaptive learning engine.
+                        </p>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mb-3">
+                        <a href="{{ route('register') }}" class="btn btn-primary-custom btn-lg">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Start Free Trial
+                        </a>
+                        <a href="{{ route('landing.pricing') }}" class="btn btn-outline-custom">
+                            View Pricing
+                        </a>
+                    </div>
+                    
+                    <div class="text-center">
+                        <small class="text-muted">
+                            <i class="bi bi-check-circle-fill text-success me-1"></i>7-day free trial<br>
+                            <i class="bi bi-check-circle-fill text-success me-1"></i>No credit card required
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Certifications -->
+@if($relatedCertifications->count() > 0)
+<section class="landing-section bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Related Certifications</h2>
+            <p class="section-subtitle">Expand your skills with these related certifications</p>
+        </div>
+        
+        <div class="row g-4">
+            @foreach($relatedCertifications as $related)
+                <div class="col-lg-4">
+                    <div class="landing-card h-100">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="icon bg-primary-custom text-white me-3">
+                                <i class="bi bi-award"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">{{ $related->name }}</h5>
+                                <small class="text-muted">{{ $related->provider }}</small>
+                            </div>
+                        </div>
+                        
+                        <p class="text-muted mb-3">
+                            {{ Str::limit($related->description, 100) }}
+                        </p>
+                        
+                        <a href="{{ route('landing.certifications.show', $related->slug) }}" 
+                           class="btn btn-outline-custom w-100">
+                            Learn More <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+@endsection

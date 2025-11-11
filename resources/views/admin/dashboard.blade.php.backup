@@ -1,0 +1,161 @@
+@extends('layouts.admin')
+
+@section('title', 'Admin Dashboard - SisuKai')
+@section('page-title', 'Dashboard')
+
+@section('content')
+<div class="row">
+    <!-- Welcome Card -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-2">Welcome back, {{ auth()->user()->name }}!</h4>
+                <p class="text-muted mb-0">Here's an overview of your platform's performance.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Total Learners</p>
+                        <h3 class="mb-0">0</h3>
+                    </div>
+                    <div class="text-primary">
+                        <i class="bi bi-people fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card" style="border-left-color: #10b981;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Active Users</p>
+                        <h3 class="mb-0">0</h3>
+                    </div>
+                    <div class="text-success">
+                        <i class="bi bi-person-check fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card" style="border-left-color: #f59e0b;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Certifications</p>
+                        <h3 class="mb-0">0</h3>
+                    </div>
+                    <div class="text-warning">
+                        <i class="bi bi-award fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card" style="border-left-color: #ef4444;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Questions</p>
+                        <h3 class="mb-0">0</h3>
+                    </div>
+                    <div class="text-danger">
+                        <i class="bi bi-question-circle fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Activity -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                    <p>No recent activity to display</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" disabled>
+                        <i class="bi bi-person-plus me-2"></i>Add New User
+                    </button>
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="bi bi-person-badge me-2"></i>Add Learner
+                    </button>
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="bi bi-award me-2"></i>Add Certification
+                    </button>
+                    <button class="btn btn-outline-primary" disabled>
+                        <i class="bi bi-question-circle me-2"></i>Add Question
+                    </button>
+                </div>
+                <div class="alert alert-info mt-3 mb-0">
+                    <small><i class="bi bi-info-circle me-2"></i>These features will be implemented in future updates.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">System Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Your Role:</strong> 
+                            @if(auth()->user()->hasRole('super_admin'))
+                                <span class="badge bg-danger">Super Admin</span>
+                            @elseif(auth()->user()->hasRole('content_manager'))
+                                <span class="badge bg-warning">Content Manager</span>
+                            @elseif(auth()->user()->hasRole('support_staff'))
+                                <span class="badge bg-info">Support Staff</span>
+                            @else
+                                <span class="badge bg-secondary">No Role Assigned</span>
+                            @endif
+                        </p>
+                        <p><strong>User Type:</strong> <span class="badge bg-primary">{{ ucfirst(auth()->user()->user_type) }}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
+                        <p><strong>Last Login:</strong> {{ now()->format('M d, Y h:i A') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
